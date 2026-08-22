@@ -32,6 +32,7 @@ const emptyCta = pick<HTMLButtonElement>('#empty-cta');
 const filterRow = pick<HTMLDivElement>('#filter-row');
 const filterSky = pick<HTMLSelectElement>('#filter-sky');
 const filterEmpty = pick<HTMLParagraphElement>('#filter-empty');
+const listLoading = pick<HTMLParagraphElement>('#list-loading');
 const loadError = pick<HTMLParagraphElement>('#load-error');
 const countLabel = pick<HTMLParagraphElement>('#session-count');
 const liveRegion = pick<HTMLParagraphElement>('#live-region');
@@ -201,6 +202,13 @@ function populateFilter(): void {
   }
 }
 
+/** Pending-state hook for the history region; extend for any async load. */
+function setListLoading(busy: boolean): void {
+  listLoading.hidden = !busy;
+  list.setAttribute('aria-busy', String(busy));
+  if (busy) list.hidden = emptyState.hidden = filterRow.hidden = true;
+}
+
 function render(): void {
   const total = sessions.length;
   const active = filterSky.value;
@@ -332,6 +340,8 @@ function handleDeleteClick(event: MouseEvent): void {
 
 function init(): void {
   refreshMaxDate();
+  populateFilter();
+  setListLoading(true);
 
   const loaded = loadSessions();
   if (loaded.ok) {
@@ -346,8 +356,11 @@ function init(): void {
     loadError.hidden = false;
   }
 
-  populateFilter();
-  render();
+  // Paint the loading state one frame before revealing the list (async-ready hook).
+  requestAnimationFrame(() => {
+    setListLoading(false);
+    render();
+  });
 
   filterSky.addEventListener('change', render);
   form.addEventListener('submit', handleSubmit);
