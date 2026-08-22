@@ -1,5 +1,7 @@
-node_modules
-dist
 *.local
 .DS_Store
 .claude
+PRD*.md
+dist
+node_modules
+package-lock.json
