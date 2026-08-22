@@ -1,6 +1,5 @@
-/** localStorage boundary. `loadSessions` and `saveSessions` never call each
- *  other, so a read failure and a write failure keep separate signals and
- *  reach separate places in the UI. */
+/** localStorage boundary. `loadSessions` and `saveSessions` never call each other,
+ *  so read and write failures keep separate signals and separate UI slots. */
 import { normalizeStoredSession, type SessionEntry } from './domain';
 
 const KEY = 'constellation.sessions.v1';

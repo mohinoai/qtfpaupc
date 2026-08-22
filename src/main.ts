@@ -1,5 +1,4 @@
-/** DOM layer. Static shell lives in index.html; this file only renders the
- *  session list and toggles state (empty, load error, field errors, toasts). */
+/** DOM layer. Static shell in index.html; JS renders the session list and toggles state. */
 import {
   createSessionEntry,
   sortByDateDesc,
@@ -30,6 +29,9 @@ const formToast = pick<HTMLParagraphElement>('#form-toast');
 const list = pick<HTMLOListElement>('#session-list');
 const emptyState = pick<HTMLDivElement>('#empty-state');
 const emptyCta = pick<HTMLButtonElement>('#empty-cta');
+const filterRow = pick<HTMLDivElement>('#filter-row');
+const filterSky = pick<HTMLSelectElement>('#filter-sky');
+const filterEmpty = pick<HTMLParagraphElement>('#filter-empty');
 const loadError = pick<HTMLParagraphElement>('#load-error');
 const countLabel = pick<HTMLParagraphElement>('#session-count');
 const liveRegion = pick<HTMLParagraphElement>('#live-region');
@@ -71,7 +73,6 @@ function makeId(): string {
   return `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-/** Local wall-clock "now" as a datetime-local value, recomputed on demand. */
 function localNowValue(): string {
   const now = new Date();
   const pad = (value: number) => String(value).padStart(2, '0');
@@ -150,7 +151,7 @@ function addCustomConstellation(): void {
     box.value = name;
     box.checked = true;
     label.appendChild(box);
-    label.appendChild(el('span', undefined, name));
+    label.appendChild(document.createTextNode(name));
     constellationGroup.appendChild(label);
     box.focus();
   }
@@ -193,14 +194,33 @@ function buildCard(entry: SessionEntry): HTMLLIElement {
   return item;
 }
 
+function populateFilter(): void {
+  for (const option of Array.from(skySelect.options)) {
+    if (!option.value) continue;
+    filterSky.add(new Option(option.value, option.value));
+  }
+}
+
 function render(): void {
-  const ordered = sortByDateDesc(sessions);
+  const total = sessions.length;
+  const active = filterSky.value;
+  const visible = active ? sessions.filter((session) => session.sky === active) : sessions;
+  const ordered = sortByDateDesc(visible);
   list.replaceChildren(...ordered.map(buildCard));
 
-  const empty = ordered.length === 0;
-  emptyState.hidden = !empty;
-  list.hidden = empty;
-  countLabel.textContent = empty ? '' : `${ordered.length} sesi tercatat`;
+  const noneAtAll = total === 0;
+  const noneMatch = !noneAtAll && ordered.length === 0;
+  emptyState.hidden = !noneAtAll;
+  filterRow.hidden = noneAtAll;
+  list.hidden = ordered.length === 0;
+  filterEmpty.hidden = !noneMatch;
+  if (noneMatch) filterEmpty.textContent = `Tidak ada sesi dengan kondisi langit "${active}".`;
+
+  countLabel.textContent = noneAtAll
+    ? ''
+    : active
+      ? `${ordered.length} dari ${total} sesi`
+      : `${total} sesi tercatat`;
 }
 
 function disarmDelete(): void {
@@ -326,8 +346,10 @@ function init(): void {
     loadError.hidden = false;
   }
 
+  populateFilter();
   render();
 
+  filterSky.addEventListener('change', render);
   form.addEventListener('submit', handleSubmit);
   addCustomButton.addEventListener('click', addCustomConstellation);
   customInput.addEventListener('keydown', (event) => {

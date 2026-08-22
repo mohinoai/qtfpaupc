@@ -1,5 +1,4 @@
-/** Pure domain logic. No DOM, no localStorage, no ambient clock: "now" is
- *  passed in so every rule is testable with a fake timestamp. */
+/** Pure domain logic: no DOM, no localStorage, no ambient clock. "now" is passed in for testability. */
 
 export interface SessionInput {
   datetime: string;

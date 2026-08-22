@@ -1,8 +1,8 @@
 # Constellation
 
-Catatan sesi pengamatan bintang. Vanilla HTML, CSS, TypeScript via Vite.
+Catatan sesi pengamatan bintang. Vanilla HTML, CSS, TypeScript + Vite.
 
     npm install
-    npm run dev     # server lokal
+    npm run dev     # dev server
     npm test        # unit test domain
-    npm run build   # typecheck + bundle produksi
+    npm run build   # typecheck + bundle

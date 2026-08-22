@@ -57,18 +57,18 @@
         <span class="hint" id="h-const">Centang minimal satu.</span>
         <span class="error" id="e-constellations" hidden></span>
         <div class="checks" id="constellation-group">
-          <label class="check"><input type="checkbox" name="constellation" value="Orion" /><span>Orion</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Ursa Major" /><span>Ursa Major</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Ursa Minor" /><span>Ursa Minor</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Cassiopeia" /><span>Cassiopeia</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Crux" /><span>Crux</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Scorpius" /><span>Scorpius</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Sagittarius" /><span>Sagittarius</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Taurus" /><span>Taurus</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Cygnus" /><span>Cygnus</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Lyra" /><span>Lyra</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Andromeda" /><span>Andromeda</span></label>
-          <label class="check"><input type="checkbox" name="constellation" value="Pegasus" /><span>Pegasus</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Orion" />Orion</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Ursa Major" />Ursa Major</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Ursa Minor" />Ursa Minor</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Cassiopeia" />Cassiopeia</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Crux" />Crux</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Scorpius" />Scorpius</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Sagittarius" />Sagittarius</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Taurus" />Taurus</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Cygnus" />Cygnus</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Lyra" />Lyra</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Andromeda" />Andromeda</label>
+          <label class="check"><input type="checkbox" name="constellation" value="Pegasus" />Pegasus</label>
         </div>
         <div class="add-row">
           <label class="add-label" for="f-custom">Tambah konstelasi lain</label>
@@ -76,13 +76,13 @@
             <input type="text" id="f-custom" maxlength="32" autocomplete="off" placeholder="Nama konstelasi" />
             <button type="button" id="add-custom" class="btn btn-quiet">Tambah</button>
           </div>
-          <span class="hint" id="h-custom">Tersimpan sebagai pilihan tercentang untuk sesi ini.</span>
+          <span class="hint" id="h-custom">Tersimpan tercentang untuk sesi ini.</span>
         </div>
       </fieldset>
 
       <div class="field">
         <label for="f-notes">Catatan (opsional)</label>
-        <textarea id="f-notes" name="notes" rows="3" maxlength="400" placeholder="Seeing stabil, Milky Way terlihat sampai pukul 01.00."></textarea>
+        <textarea id="f-notes" name="notes" rows="3" maxlength="400" placeholder="Seeing stabil, Milky Way terlihat jelas."></textarea>
       </div>
 
       <div class="submit-row">
@@ -98,7 +98,14 @@
       <p class="count" id="session-count"></p>
     </div>
 
+    <div class="filter-row" id="filter-row" hidden>
+      <label for="filter-sky">Saring kondisi langit</label>
+      <select id="filter-sky"><option value="">Semua kondisi</option></select>
+    </div>
+
     <p class="banner" id="load-error" role="alert" hidden></p>
+
+    <p class="filter-empty" id="filter-empty" role="status" hidden></p>
 
     <div class="empty" id="empty-state" hidden>
       <p class="empty-art" aria-hidden="true"></p>
