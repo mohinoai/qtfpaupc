@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<meta name="description" content="Catatan sesi pengamatan bintang: tanggal, lokasi, kondisi langit, dan konstelasi yang terlihat." />
+<title>Constellation - Catatan Sesi Pengamatan Bintang</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1120'/%3E%3Ccircle cx='11' cy='12' r='2' fill='%238fb6ff'/%3E%3Ccircle cx='22' cy='10' r='1.3' fill='%23dbe6ff'/%3E%3Ccircle cx='21' cy='22' r='1.8' fill='%238fb6ff'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main-content">Lompat ke konten utama</a>
+<div class="sky" aria-hidden="true"></div>
+
+<header class="masthead">
+  <h1 class="wordmark">Constellation</h1>
+  <p class="tagline">Catatan sesi pengamatan langit malam, tersimpan di perangkat ini.</p>
+</header>
+
+<main id="main-content" class="layout" tabindex="-1">
+  <p id="live-region" class="sr-only" aria-live="polite"></p>
+
+  <section class="panel" aria-labelledby="form-title">
+    <h2 id="form-title" class="panel-title">Catat sesi baru</h2>
+
+    <form id="session-form" novalidate>
+      <div class="field">
+        <label for="f-datetime">Tanggal dan waktu sesi</label>
+        <input type="datetime-local" id="f-datetime" name="datetime" required aria-describedby="h-datetime" />
+        <span class="hint" id="h-datetime">Tidak bisa melewati waktu sekarang.</span>
+        <span class="error" id="e-datetime" hidden></span>
+      </div>
+
+      <div class="field">
+        <label for="f-location">Lokasi pengamatan</label>
+        <input type="text" id="f-location" name="location" required maxlength="80" autocomplete="off" placeholder="Bukit Bintang, Gunungkidul" />
+        <span class="error" id="e-location" hidden></span>
+      </div>
+
+      <div class="field">
+        <label for="f-sky">Kondisi langit</label>
+        <select id="f-sky" name="sky" required>
+          <option value="" disabled selected>Pilih kondisi langit</option>
+          <option value="Cerah tanpa awan">Cerah tanpa awan</option>
+          <option value="Berawan sebagian">Berawan sebagian</option>
+          <option value="Mendung tebal">Mendung tebal</option>
+          <option value="Polusi cahaya kota">Polusi cahaya kota</option>
+          <option value="Berkabut tipis">Berkabut tipis</option>
+          <option value="Terang bulan">Terang bulan</option>
+        </select>
+        <span class="error" id="e-sky" hidden></span>
+      </div>
+
+      <fieldset class="field" id="f-constellations" aria-describedby="h-const">
+        <legend>Konstelasi yang terlihat</legend>
+        <span class="hint" id="h-const">Centang minimal satu.</span>
+        <span class="error" id="e-constellations" hidden></span>
+        <div class="checks" id="constellation-group">
+          <label class="check"><input type="checkbox" name="constellation" value="Orion" /><span>Orion</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Ursa Major" /><span>Ursa Major</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Ursa Minor" /><span>Ursa Minor</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Cassiopeia" /><span>Cassiopeia</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Crux" /><span>Crux</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Scorpius" /><span>Scorpius</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Sagittarius" /><span>Sagittarius</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Taurus" /><span>Taurus</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Cygnus" /><span>Cygnus</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Lyra" /><span>Lyra</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Andromeda" /><span>Andromeda</span></label>
+          <label class="check"><input type="checkbox" name="constellation" value="Pegasus" /><span>Pegasus</span></label>
+        </div>
+        <div class="add-row">
+          <label class="add-label" for="f-custom">Tambah konstelasi lain</label>
+          <div class="add-controls">
+            <input type="text" id="f-custom" maxlength="32" autocomplete="off" placeholder="Nama konstelasi" />
+            <button type="button" id="add-custom" class="btn btn-quiet">Tambah</button>
+          </div>
+          <span class="hint" id="h-custom">Tersimpan sebagai pilihan tercentang untuk sesi ini.</span>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="f-notes">Catatan (opsional)</label>
+        <textarea id="f-notes" name="notes" rows="3" maxlength="400" placeholder="Seeing stabil, Milky Way terlihat sampai pukul 01.00."></textarea>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn btn-primary">Simpan sesi</button>
+        <p class="toast" id="form-toast" role="alert" hidden></p>
+      </div>
+    </form>
+  </section>
+
+  <section class="log" aria-labelledby="log-title">
+    <div class="log-head">
+      <h2 id="log-title" class="panel-title">Riwayat sesi</h2>
+      <p class="count" id="session-count"></p>
+    </div>
+
+    <p class="banner" id="load-error" role="alert" hidden></p>
+
+    <div class="empty" id="empty-state" hidden>
+      <p class="empty-art" aria-hidden="true"></p>
+      <p class="empty-title">Belum ada sesi pengamatan tercatat</p>
+      <p class="empty-body">Mulai catat sesi pertamamu, lalu riwayatnya muncul di sini dari yang paling baru.</p>
+      <button type="button" class="btn btn-primary" id="empty-cta">Catat sesi pertama</button>
+    </div>
+
+    <ol class="cards" id="session-list"></ol>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Data hanya tersimpan di localStorage browser ini. Tidak ada server, tidak ada akun.</p>
+</footer>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
