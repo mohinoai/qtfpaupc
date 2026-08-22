@@ -12,7 +12,7 @@ const CONFIRM_WINDOW_MS = 4000;
 
 const pick = <T extends Element>(selector: string): T => {
   const node = document.querySelector<T>(selector);
-  if (!node) throw new Error(`Elemen tidak ditemukan: ${selector}`);
+  if (!node) throw new Error(selector);
   return node;
 };
 
@@ -148,8 +148,7 @@ function addCustomConstellation(): void {
     const label = el('label', 'check');
     const box = el('input');
     box.type = 'checkbox';
-    box.name = 'constellation';
-    box.value = name;
+      box.value = name;
     box.checked = true;
     label.appendChild(box);
     label.appendChild(document.createTextNode(name));
@@ -202,7 +201,6 @@ function populateFilter(): void {
   }
 }
 
-/** Pending-state hook for the history region; extend for any async load. */
 function setListLoading(busy: boolean): void {
   listLoading.hidden = !busy;
   list.setAttribute('aria-busy', String(busy));
@@ -356,7 +354,6 @@ function init(): void {
     loadError.hidden = false;
   }
 
-  // Paint the loading state one frame before revealing the list (async-ready hook).
   requestAnimationFrame(() => {
     setListLoading(false);
     render();
